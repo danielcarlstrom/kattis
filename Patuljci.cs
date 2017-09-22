@@ -4,15 +4,13 @@ using System.Linq;
 
 namespace task1
 {
-    class Program
+    internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             var testNumbers = new List<int>();
             for (var i = 0; i < 9; i++)
-            {
-                testNumbers.Add(Int32.Parse(Console.ReadLine()));
-            }
+                testNumbers.Add(int.Parse(Console.ReadLine()));
             CalcTests(testNumbers.ToArray());
         }
 
@@ -20,10 +18,12 @@ namespace task1
         {
             var diff = numbers.Sum() - 100;
 
-            foreach (var number1 in numbers)
+            for (var i = 0; i < numbers.Length; i++)
             {
-                foreach (var number2 in numbers)
+                var number1 = numbers[i];
+                for (var j = 1; j < numbers.Length; j++)
                 {
+                    var number2 = numbers[j];
                     if (number1 + number2 == diff)
                     {
                         NumbersToOutput(number1, number2, numbers);
@@ -38,9 +38,7 @@ namespace task1
             foreach (var number in numbers)
             {
                 if (number == i || number == j)
-                {
                     continue;
-                }
                 Console.WriteLine(number);
             }
         }
