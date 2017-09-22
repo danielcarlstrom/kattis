@@ -35,8 +35,8 @@ namespace task3
         {
             var numberOfCokes = testData[0];
             var wallet = new Wallet(testData[1], testData[2], testData[3]); //skapa en plånbok och ladda den med cash
-            var minimumCoinsSpent = new List<int>(); //lista med alla olika output givet coinOrder
-            var coinOrder = CalcCoinOrderCombinations();
+            var minimumCoinsSpent = new List<int>(); 
+            var coinOrder = CalcCoinOrderCombinations(); //lista med alla olika output givet coinOrder
             
             foreach (var position in coinOrder) //alla tänkbara ordningsföljder för betalningar
             {
