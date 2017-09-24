@@ -10,7 +10,7 @@ namespace task1
         {
             var testNumbers = new List<int>();
             for (var i = 0; i < 9; i++)
-                testNumbers.Add(int.Parse(Console.ReadLine()));
+                testNumbers.Add(Convert.ToInt32(Console.ReadLine()));
             CalcTests(testNumbers.ToArray());
         }
 
@@ -20,13 +20,15 @@ namespace task1
 
             for (var i = 0; i < numbers.Length; i++)
             {
-                var number1 = numbers[i];
-                for (var j = 1; j < numbers.Length; j++)
+                for (var j = 0; j < numbers.Length; j++)
                 {
-                    var number2 = numbers[j];
-                    if (number1 + number2 == diff)
+                    if (numbers[i] == numbers[j])
                     {
-                        NumbersToOutput(number1, number2, numbers);
+                        continue;
+                    }
+                    if (numbers[i] + numbers[j] == diff)
+                    {
+                        NumbersToOutput(numbers[i], numbers[j], numbers);
                         return;
                     }
                 }
