@@ -37,16 +37,16 @@ namespace BuyCoke
 
             //get all permutations of "ones", "fives" and "tens" in order to test all combinations of input to the machine
             var spendRules = GetSpendRules();
-            var lowestList = new HashSet<int>();
+            var lowestSet = new HashSet<int>();
 
             foreach (var spendRule in spendRules)
             {
                 var wallet = new Wallet(testData[1], testData[2], testData[3]);
                 CalculateMinimumCoins(numberOfCokes, wallet, spendRule);
-                lowestList.Add(wallet.CoinsSpentThisRound);
+                lowestSet.Add(wallet.CoinsSpentThisRound);
                 wallet.CoinsSpentThisRound = 0;
             }
-            var min = lowestList.Min();
+            var min = lowestSet.Min();
             Console.WriteLine(min);
         }
 
@@ -54,7 +54,9 @@ namespace BuyCoke
         {
             //here we decide what coin we want to test first
             while (numberOfCokes > 0)
+            {
                 foreach (var coinValue in spendRule)
+                {
                     switch (coinValue)
                     {
                         case "ones":
@@ -109,30 +111,9 @@ namespace BuyCoke
                             break;
                         }
                     }
-        }
-
-        #region save for later
-
-        private static void DistributeFunds(int newFunds, Wallet wallet)
-        {
-            wallet.Ones = 0;
-            wallet.Fives = 0;
-            wallet.Tens = 0;
-
-            while (newFunds / 10 >= 1)
-            {
-                newFunds -= 10;
-                wallet.Tens += 1;
+                }
             }
-            while (newFunds / 5 >= 1)
-            {
-                newFunds -= 5;
-                wallet.Fives += 1;
-            }
-            wallet.Ones += newFunds;
         }
-
-        #endregion
 
         #region Help methods
 
@@ -143,7 +124,8 @@ namespace BuyCoke
             numberTwo = temp;
         }
 
-        public static void PermuteArray(string[] inputArray, int currentPosition, int endPosition, ref HashSet<string[]> coinOrders)
+        public static void PermuteArray(string[] inputArray, int currentPosition, int endPosition,
+            ref HashSet<string[]> coinOrders)
         {
             int i;
             if (currentPosition == endPosition)
@@ -158,8 +140,6 @@ namespace BuyCoke
                 for (i = currentPosition; i <= endPosition; i++)
                 {
                     SwapNumbers(ref inputArray[currentPosition], ref inputArray[i]);
-                    
-                    //recursive call with +1 on currentPosition to step through the array
                     PermuteArray(inputArray, currentPosition + 1, endPosition, ref coinOrders);
                     SwapNumbers(ref inputArray[currentPosition], ref inputArray[i]);
                 }
@@ -191,12 +171,6 @@ namespace BuyCoke
         public int Ones { get; set; }
         public int Fives { get; set; }
         public int Tens { get; set; }
-
         public int CoinsSpentThisRound { get; set; }
-
-        public int GetTotalFunds()
-        {
-            return Ones + Fives * 5 + Tens * 10;
-        }
     }
 }
