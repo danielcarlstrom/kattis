@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace task1
+namespace Patuljci
 {
     internal class Program
     {
