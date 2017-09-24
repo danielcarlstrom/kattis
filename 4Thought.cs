@@ -1,55 +1,53 @@
 using System;
 using System.Collections.Generic;
 
-namespace task2
+namespace FourThought
 {
-    class Program
+    internal class Program
     {
-        static void Main()
+        private static void Main()
         {
-            var tests = Int32.Parse(Console.ReadLine());
-            var testsList = new List<int>();
-            for (var i = 0; i < tests; i++)
-            {
-                testsList.Add(Int32.Parse(Console.ReadLine()));
-            }
+            #region Kattis testdata
 
-            //generera upp alla kombinationer av operatorerna "+ - * /"
+            var numberOfTests = Convert.ToInt32(Console.ReadLine());
+            var testsList = new List<int>();
+            for (var i = 0; i < numberOfTests; i++)
+            {
+                testsList.Add(Convert.ToInt32(Console.ReadLine()));
+            }
+            
+            #endregion
+
+            //generate all combinations of operators "+ - * /"
             var possibleOperatorCombinations = CalcOperatorCombinations();
 
-            //ta fram alla tänkbara strängar utifrån kombinationer av operatorer och givna "4 4 4 4"
+            //generate all possible combinations of operators given and "4 4 4 4"
             var possibleCalcCombinations = PrepareCalcCombinatons(possibleOperatorCombinations);
 
-            //räkna summorna för alla strängkombinationer och lägg dem i en dictionary tillsammans med strängen, för output
+            //calculate sums for all testcases and populate a dictionary with the result and the calculation used
             var possibleSums = CalcPossibleSums(possibleCalcCombinations);
 
             foreach (var test in testsList)
             {
                 if (possibleSums.ContainsKey(test))
-                {
-                    //yay!
                     Console.WriteLine(possibleSums[test] + " = " + test);
-                }
                 else
-                {
-                    //oh no :/
                     Console.WriteLine("no solution");
-                }
             }
         }
 
         private static Dictionary<int, string> CalcPossibleSums(List<string> possibleCalcCombinatons)
         {
-            var sums = new Dictionary<int, string>(); ;
+            var sums = new Dictionary<int, string>();
             foreach (var possibleCalcCombinaton in possibleCalcCombinatons)
             {
                 var sum = InfixToPostfixCalculation(possibleCalcCombinaton);
 
-                //vi vill ha heltal, alltså måste "4/4/4/4" bli 0
+                //no fractions, so "4/4/4/4" would be 0
                 var floorDoubleSum = Math.Floor(sum);
-                if (sums.ContainsKey((int)floorDoubleSum))
+                if (sums.ContainsKey((int) floorDoubleSum))
                     continue;
-                sums.Add((int)floorDoubleSum, possibleCalcCombinaton);
+                sums.Add((int) floorDoubleSum, possibleCalcCombinaton);
             }
             return sums;
         }
@@ -59,37 +57,32 @@ namespace task2
             var outputList = new List<string>();
             var operatorStack = new Stack<string>();
 
-            foreach (var current in possibleCalcCombinaton.Replace(" ", String.Empty))
+            foreach (var current in possibleCalcCombinaton.Replace(" ", string.Empty))
             {
-                if (Char.IsNumber(current))
+                if (char.IsNumber(current))
                 {
                     outputList.Add(current.ToString());
                 }
                 else
                 {
-                    //kolla om stacken är tom
                     if (operatorStack.Count > 0)
-                    {
                         PeekIsSameOrHigherPrecedence(current, operatorStack.Peek(), outputList, operatorStack);
-                    }
                     else
-                    {
-                        //stacken är tom så lägg till en operator
                         operatorStack.Push(current.ToString());
-                    }
                 }
             }
-            //klar med uppdelningen, lägg på resterande operatorer
+            //done with splitting, add the remaining operators
             foreach (var op in operatorStack)
             {
                 outputList.Add(op);
             }
+
             var outputListString = "";
+
             foreach (var s in outputList)
             {
                 outputListString += s;
             }
-
             return CalcPostfix(outputListString);
         }
 
@@ -100,15 +93,10 @@ namespace task2
 
             foreach (var current in outputList)
             {
-                if (Char.IsNumber(current))
-                {
-                    operandStack.Push((int)char.GetNumericValue(current));
-                }
+                if (char.IsNumber(current))
+                    operandStack.Push((int) char.GetNumericValue(current));
                 else
-                {
-                    //beräkna top två i stacken med nuvarande operator
                     val = TakeTwoAndCalc(current, operandStack.Pop(), operandStack.Pop(), operandStack);
-                }
             }
             return val;
         }
@@ -119,41 +107,33 @@ namespace task2
             switch (current)
             {
                 case '+':
-                    {
-                        if (operandStack.Count == 0)
-                        {
-                            val = secondOperand + topOperand;
-                        }
-                        operandStack.Push(secondOperand + topOperand);
-                        break;
-                    }
+                {
+                    if (operandStack.Count == 0)
+                        val = secondOperand + topOperand;
+                    operandStack.Push(secondOperand + topOperand);
+                    break;
+                }
                 case '-':
-                    {
-                        if (operandStack.Count == 0)
-                        {
-                            val = secondOperand - topOperand;
-                        }
-                        operandStack.Push(secondOperand - topOperand);
-                        break;
-                    }
+                {
+                    if (operandStack.Count == 0)
+                        val = secondOperand - topOperand;
+                    operandStack.Push(secondOperand - topOperand);
+                    break;
+                }
                 case '*':
-                    {
-                        if (operandStack.Count == 0)
-                        {
-                            val = secondOperand * topOperand;
-                        }
-                        operandStack.Push(secondOperand * topOperand);
-                        break;
-                    }
+                {
+                    if (operandStack.Count == 0)
+                        val = secondOperand * topOperand;
+                    operandStack.Push(secondOperand * topOperand);
+                    break;
+                }
                 case '/':
-                    {
-                        if (operandStack.Count == 0)
-                        {
-                            val = (double)secondOperand / topOperand;
-                        }
-                        operandStack.Push(secondOperand / topOperand);
-                        break;
-                    }
+                {
+                    if (operandStack.Count == 0)
+                        val = (double) secondOperand / topOperand;
+                    operandStack.Push(secondOperand / topOperand);
+                    break;
+                }
             }
             return val;
         }
@@ -164,40 +144,40 @@ namespace task2
             {
                 case "*":
                 case "/":
-                    {
-                        //nu poppar vi stacken och pushar på nya operatorn
-                        outputList.Add(operatorStack.Pop());
-                        operatorStack.Push(current.ToString());
-                        return;
-                    }
+                {
+                    //pop the stack and push the new operator
+                    outputList.Add(operatorStack.Pop());
+                    operatorStack.Push(current.ToString());
+                    return;
+                }
                 case "-":
                 case "+":
+                {
+                    switch (current)
                     {
-                        switch (current)
+                        case '-':
+                        case '+':
                         {
-                            case '-':
-                            case '+':
-                                {
-                                    if (operatorStack.Count > 0)
-                                    {
-                                        //nu poppar vi stacken och pushar nya operatorn
-                                        outputList.Add(operatorStack.Pop());
-                                        //rekursivt, kolla om vi ska adda en till stacken eller inte
-                                        PeekIsSameOrHigherPrecedence(current, peek, outputList, operatorStack);
-                                        return;
-                                    }
-                                }
-                                break;
+                            if (operatorStack.Count > 0)
+                            {
+                                //pop the stack and push the new operator
+                                outputList.Add(operatorStack.Pop());
+                                //recursive check if we should add another one
+                                PeekIsSameOrHigherPrecedence(current, peek, outputList, operatorStack);
+                                return;
+                            }
                         }
+                            break;
                     }
+                }
                     break;
             }
 
-            //toppen av stacken < current i precedence så lägg den på stacken
+            //the top of the stack is < current in precedence so push it to the stack
             operatorStack.Push(current.ToString());
         }
 
-        static private List<string> PrepareCalcCombinatons(HashSet<string> possibleOperatorCombinations)
+        private static List<string> PrepareCalcCombinatons(HashSet<string> possibleOperatorCombinations)
         {
             var combinations = new List<string>();
             foreach (var opc in possibleOperatorCombinations)
@@ -221,7 +201,6 @@ namespace task2
                             break;
                     }
                 }
-
                 combinations.Add(calc);
             }
             return combinations;
@@ -230,18 +209,16 @@ namespace task2
         private static HashSet<string> CalcOperatorCombinations()
         {
             var opHashSet = new HashSet<string>();
-            var operators = new string[] { "+", "-", "/", "*" };
-            foreach (string op1 in operators)
+            var operators = new[] {"+", "-", "/", "*"};
+            foreach (var op1 in operators)
             {
-                foreach (string op2 in operators)
+                foreach (var op2 in operators)
                 {
-                    foreach (string op3 in operators)
+                    foreach (var op3 in operators)
                     {
                         var opCombo = string.Concat(op1, op2, op3);
                         if (opHashSet.Contains(opCombo))
-                        {
                             continue;
-                        }
                         opHashSet.Add(opCombo);
                     }
                 }
