@@ -166,11 +166,11 @@ namespace FourThought
                                 PeekIsSameOrHigherPrecedence(current, peek, outputList, operatorStack);
                                 return;
                             }
-                        }
                             break;
+                        }
                     }
-                }
                     break;
+                }
             }
 
             //the top of the stack is < current in precedence so push it to the stack
